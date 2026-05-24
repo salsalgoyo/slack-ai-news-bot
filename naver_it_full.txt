@@ -1,0 +1,40 @@
+<div class="sa_item_inner">
+ <div class="sa_item_flex _LAZY_LOADING_WRAP">
+  <div class="sa_thumb _LAZY_LOADING_ERROR_HIDE">
+   <div class="sa_thumb_inner">
+    <a aria-hidden="true" class="sa_thumb_link _NLOG_IMPRESSION" data-clk="itn.clart" data-imp-gdid="880000F2_000000000000000003525396" data-imp-index="1" data-imp-url="https://n.news.naver.com/mnews/article/025/0003525396" href="https://n.news.naver.com/mnews/article/025/0003525396" tabindex="-1">
+     <img alt="" class="_LAZY_LOADING _LAZY_LOADING_INIT_HIDE" data-src="https://mimgnews.pstatic.net/image/origin/025/2026/05/24/3525396.jpg?type=nf220_150" height="75" style="display: none;" width="110"/>
+    </a>
+   </div>
+  </div>
+  <div class="sa_text">
+   <a class="sa_text_title _NLOG_IMPRESSION" data-clk="itn.clart" data-imp-gdid="880000F2_000000000000000003525396" data-imp-index="1" data-imp-url="https://n.news.naver.com/mnews/article/025/0003525396" href="https://n.news.naver.com/mnews/article/025/0003525396">
+    <strong class="sa_text_strong">
+     ‘AI가 자살 유도’ 소송하는 시대에… 정신과 초진 돕는 AI 나왔다
+    </strong>
+   </a>
+   <div class="sa_text_lede">
+    정신과 진료의 첫 관문인 초진 면담을 돕는 인공지능(AI) 기술이 국내에서 나왔다. 한국과학기술원(KAIST)은 전산학부 이의진 교수·산업디자인학과 이탁연 교수 연구팀이 강남세브란스병원 정신건강의학과 김은주 교수팀과
+   </div>
+   <div class="sa_text_info">
+    <div class="sa_text_info_left">
+     <div class="sa_text_press">
+      중앙일보
+     </div>
+     <a class="sa_text_cmt _COMMENT_COUNT_LIST" data-object-id="news025,0003525396" data-ticket="news" data-zero-allow="false" href="https://n.news.naver.com/mnews/article/comment/025/0003525396" style="display: none;">
+     </a>
+    </div>
+    <div class="sa_text_info_right">
+     <a class="sa_text_cluster" data-clk="clcou" href="/cluster/c_202605241210_00000007/section/105?oid=025&amp;aid=0003525396">
+      <span class="sa_text_cluster_num">
+       15
+      </span>
+      <span class="blind">
+       개의 관련뉴스 더보기
+      </span>
+     </a>
+    </div>
+   </div>
+  </div>
+ </div>
+</div>
