@@ -1,0 +1,38 @@
+name: Daily ZDNet AI News to Slack
+
+on:
+  schedule:
+    # 깃허브 액션의 cron은 UTC 시간을 기준으로 작동합니다.
+    # 한국 시간(KST, UTC+9) 아침 8시는 UTC 기준 전날 밤 11시(23시)입니다.
+    - cron: '0 23 * * *'
+  workflow_dispatch: # 원할 때 언제든 수동으로 실행할 수 있는 옵션
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. GitHub 저장소의 코드를 가져옵니다.
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # 2. 파이썬 환경을 설정합니다.
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10' # 원하는 파이썬 버전 지정
+        cache: 'pip' # 패키지 설치 속도를 높이기 위한 캐시 적용
+
+    # 3. 필요한 라이브러리를 설치합니다.
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    # 4. 봇 스크립트를 실행합니다.
+    - name: Run Slack News Bot
+      env:
+        TZ: 'Asia/Seoul' # 타임존을 서울로 설정
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # GitHub Secrets에서 웹훅 URL 가져오기
+      run: |
+        python slack_news_bot.py
