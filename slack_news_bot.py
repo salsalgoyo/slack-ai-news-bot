@@ -8,11 +8,7 @@ from email.utils import parsedate_to_datetime
 
 KST = timezone(timedelta(hours=9))
 
-def get_cutoff_time():
-    now = datetime.now(KST)
-    return now.replace(hour=5, minute=0, second=0, microsecond=0)
-
-def get_naver_news(cutoff_time, limit=3):
+def get_naver_news(limit=3):
     url = "https://news.naver.com/section/105"
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
@@ -49,7 +45,9 @@ def get_naver_news(cutoff_time, limit=3):
                     date_str = date_tag["data-date-time"] # "2026-05-24 14:52:27"
                     pub_time = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S").replace(tzinfo=KST)
                     
-                    if pub_time >= cutoff_time:
+                    # 최신순 정렬이므로 그대로 추가 (단, 2일 이상 지난 너무 오래된 기사 제외)
+                    now = datetime.now(KST)
+                    if (now - pub_time).days <= 2:
                         news_list.append({"title": title, "link": link, "source": "네이버 IT/과학"})
             except Exception as e:
                 print(f"네이버 개별 기사 크롤링 오류: {e}")
@@ -59,7 +57,7 @@ def get_naver_news(cutoff_time, limit=3):
         
     return news_list
 
-def get_google_news(cutoff_time, limit=5):
+def get_google_news(limit=5):
     url = "https://news.google.com/rss/search?q=AI&hl=ko&gl=KR&ceid=KR:ko"
     news_list = []
     try:
@@ -71,7 +69,8 @@ def get_google_news(cutoff_time, limit=5):
             try:
                 pub_dt = parsedate_to_datetime(entry.published)
                 pub_dt_kst = pub_dt.astimezone(KST)
-                if pub_dt_kst >= cutoff_time:
+                now = datetime.now(KST)
+                if (now - pub_dt_kst).days <= 2:
                     news_list.append({"title": entry.title, "link": entry.link, "source": "구글 뉴스"})
             except Exception as e:
                 print(f"구글 뉴스 시간 파싱 오류: {e}")
@@ -88,7 +87,7 @@ def parse_zdnet_time(date_str):
     except:
         return None
 
-def get_zdnet_news(cutoff_time, limit=3):
+def get_zdnet_news(limit=3):
     url = "https://search.zdnet.co.kr/?kwd=AI"
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
@@ -127,7 +126,8 @@ def get_zdnet_news(cutoff_time, limit=3):
             date_str = byline_span.get_text(strip=True) if byline_span else ""
             
             pub_time = parse_zdnet_time(date_str)
-            if pub_time and pub_time >= cutoff_time:
+            now = datetime.now(KST)
+            if pub_time and (now - pub_time).days <= 2:
                 news_list.append({"title": title, "link": href, "source": "지디넷코리아"})
     except Exception as e:
         print(f"지디넷 크롤링 오류: {e}")
@@ -141,7 +141,7 @@ def send_slack_message(all_news):
         return
 
     if not all_news:
-        print("조건에 맞는(오늘 오전 5시 이후) 기사가 없습니다.")
+        print("조건에 맞는(최근 48시간 이내) 기사가 없습니다.")
         return
 
     blocks = [
@@ -149,7 +149,7 @@ def send_slack_message(all_news):
             "type": "header",
             "text": {
                 "type": "plain_text",
-                "text": "🗞️ 일일 주요 AI 뉴스 (05시 이후 최신)",
+                "text": "🗞️ 일일 주요 AI 뉴스 (최신)",
                 "emoji": True
             }
         },
@@ -185,12 +185,10 @@ def send_slack_message(all_news):
 if __name__ == "__main__":
     try:
         print("최신 뉴스를 가져오는 중...")
-        cutoff = get_cutoff_time()
-        print(f"기준 시간: {cutoff.strftime('%Y-%m-%d %H:%M:%S KST')} 이후 기사만 가져옵니다.")
         
-        zdnet = get_zdnet_news(cutoff, limit=3)
-        google = get_google_news(cutoff, limit=5)
-        naver = get_naver_news(cutoff, limit=3)
+        zdnet = get_zdnet_news(limit=3)
+        google = get_google_news(limit=5)
+        naver = get_naver_news(limit=3)
         
         all_news = zdnet + google + naver
         
